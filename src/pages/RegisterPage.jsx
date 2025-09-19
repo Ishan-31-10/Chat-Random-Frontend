@@ -27,12 +27,13 @@ export default function RegisterPage() {
 
   async function submit(e) {
     e.preventDefault();
+    if (!payload.team) {
+      // <-- Validation yahan honi chahiye
+      showError("Please select a team");
+      return;
+    }
     try {
       await register(payload);
-      if (!payload.team) {
-        showError("Please select a team");
-        return;
-      }
       showSuccess("Registered. Please login.");
     } catch (err) {
       showError("Registration failed");

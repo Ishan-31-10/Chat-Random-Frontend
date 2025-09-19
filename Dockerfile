@@ -3,6 +3,7 @@ FROM node:18-alpine as build
 WORKDIR /app
 COPY package.json package-lock.json* ./
 RUN npm install
+RUN npm install tailwindcss @tailwindcss/forms
 COPY . .
 RUN npm run build
 

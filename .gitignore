@@ -1,9 +1,23 @@
+# Dependencies
 node_modules/
+*.log
+yarn.lock
+package-lock.json
+
+# Env files
 .env
-dist/
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Build output
 build/
-tmp/
-temp/
+dist/
 .cache/
 .next/
-*.json
+out/
+
+# Editor / OS
+.DS_Store
+*.swp

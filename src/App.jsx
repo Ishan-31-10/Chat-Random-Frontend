@@ -8,6 +8,16 @@ import CampaignDetail from "./pages/CampaignDetail";
 import RecipientDetail from "./pages/RecipientDetail";
 import DeliveryFeed from "./pages/DeliveryFeed";
 import AdminDashboard from "./pages/AdminDashboard";
+import AssignedCampaignsPage from "./pages/AssignedCampaignsPage";
+import AdminLayout from "./layouts/AdminLayout";
+import Dashboard from "./pages/admin/Dashboard";
+import Users from "./pages/admin/Users";
+import Messages from "./pages/admin/Messages";
+import Teams from "./pages/admin/Teams";
+import Campaigns from "./pages/admin/Campaigns";
+import Notifications from "./pages/admin/Notifications";
+import Settings from "./pages/admin/Settings";
+
 import {
   initFirebase,
   requestFcmToken,
@@ -16,7 +26,6 @@ import {
 import { toast } from "react-toastify";
 import api from "./api/axios"; // <--- Naya import
 import { useAuth } from "./context/AuthContext";
-
 
 function PrivateRoute({ children }) {
   const { user } = useAuth();
@@ -30,10 +39,7 @@ export default function App() {
       const userToken = localStorage.getItem("token");
       if (!userToken) return;
 
-      await api.put(
-        "/auth/fcm",
-        { fcmToken }
-      );
+      await api.put("/auth/fcm", { fcmToken });
       console.log("FCM token sent to backend successfully.");
     } catch (error) {
       console.error("Failed to send FCM token to backend:", error);
@@ -65,8 +71,11 @@ export default function App() {
     <>
       <Navbar />
       <Routes>
+        {/* Public */}
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+
+        {/* User Routes */}
         <Route
           path="/"
           element={
@@ -108,13 +117,32 @@ export default function App() {
           }
         />
         <Route
-          path="/admin"
+          path="/assigned"
           element={
             <PrivateRoute>
-              <AdminDashboard />
+              <AssignedCampaignsPage />
             </PrivateRoute>
           }
         />
+
+        {/* Admin Routes */}
+        <Route
+          path="/admin"
+          element={
+            <PrivateRoute>
+              <AdminLayout />
+            </PrivateRoute>
+          }
+        >
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="users" element={<Users />} />
+          <Route path="teams" element={<Teams />} />
+          <Route path="campaigns" element={<Campaigns />} />
+          <Route path="notifications" element={<Notifications />} />
+          <Route path="messages" element={<Messages />} />
+          <Route path="settings" element={<Settings />} />
+          <Route path="*" element={<Navigate to="dashboard" replace />} />
+        </Route>
       </Routes>
     </>
   );

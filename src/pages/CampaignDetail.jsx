@@ -6,15 +6,24 @@ export default function CampaignDetail(){
   const { id } = useParams();
   const [campaign,setCampaign]=useState(null);
   const [recipients,setRecipients]=useState([]);
+  const [loading, setLoading] = useState(true);
 
-  useEffect(()=>{ load(); },[]);
+  useEffect(()=>{
+    if (id) {
+      load();
+    }
+  }, [id]);
   async function load(){
+    setLoading(true);
     try{
       const res = await api.get(`/campaigns/${id}`);
       setCampaign(res.data);
       const recs = await api.get(`/campaigns/${id}/recipients`);
       setRecipients(recs.data || []);
     }catch(e){ console.error(e); }
+    finally{
+      setLoading(false);
+    }
   }
 
   return (
@@ -27,12 +36,14 @@ export default function CampaignDetail(){
           <h3 className="mt-4 font-semibold">Recipients</h3>
           <div className="grid gap-2 mt-2">
             {recipients.map(r=>(
-              <div key={r.id} className="p-2 bg-white rounded border flex justify-between items-center">
+              <div key={r._id} className="p-2 bg-white rounded border flex justify-between items-center">
                 <div>
                   <div className="font-medium">{r.name}</div>
                   <div className="text-sm text-gray-600">{r.email} • {r.phone}</div>
                 </div>
-                <div className="text-sm">{r.status}</div>
+                <div className="flex gap-2">
+                  <Link to={`/recipients/${r._id}`} className="px-2 py-1 bg-indigo-600 text-white rounded">Open</Link>
+                </div>
               </div>
             ))}
           </div>

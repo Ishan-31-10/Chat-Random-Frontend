@@ -15,6 +15,8 @@ export default function Navbar() {
           <>
             <Link to="/campaigns">Campaigns</Link>
             <Link to="/deliveries">Deliveries</Link>
+            <Link to="/assigned" className="px-2">Assigned to Me</Link>
+
           </>
         )}
 
